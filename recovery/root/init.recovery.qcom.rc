@@ -1,0 +1,58 @@
+import /init.services.qcom.rc
+
+on init
+    start boot-hal-1-1
+    
+on boot
+    setprop sys.usb.config adb
+
+on fs
+    wait /dev/block/platform/soc/${ro.boot.bootdevice}
+    symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
+    chmod 0660 /dev/qseecom
+    chown system drmrpc /dev/qseecom
+    chmod 0664 /dev/ion
+    chown system system /dev/ion
+    
+    # Change ownership and permission for vibrator
+    chown system system /sys/class/timed_output/vibrator/enable
+    chmod 0660 /sys/class/timed_output/vibrator/enable
+    chown system system /sys/class/leds/vibrator/state
+    chmod 0660 /sys/class/leds/vibrator/state
+    chown system system /sys/class/leds/vibrator/activate
+    chmod 0660 /sys/class/leds/vibrator/activate
+    chown system system /sys/class/leds/vibrator/duration
+    chmod 0660 /sys/class/leds/vibrator/duration
+    chown system system /sys/class/leds/vibrator/seq
+    chmod 0660 /sys/class/leds/vibrator/seq
+    chown system system /sys/class/leds/vibrator/extra
+    chmod 0660 /sys/class/leds/vibrator/extra
+    chown root vendor_mod /sys/bus/i2c/devices/2-005a/reduce
+
+on boot
+    start health-hal-2-1
+    setprop sys.usb.config adb
+
+on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
+    install_keyring
+
+on property:ro.crypto.state=encrypted && property:hwservicemanager.ready=true
+    start vendor.qseecomd
+
+on property:vendor.sys.listeners.registered=true
+    start gatekeeper-1-0-qti
+    start keymaster-4-1-qti
+
+on property:twrp.all.users.decrypted=true
+    stop vendor.qseecomd
+    stop gatekeeper-1-0-qti
+    stop keymaster-4-1-qti
+
+on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
+    chmod 0777 /system/bin/wrappedkey-fix.sh
+    start wrapped-key
+
+# Haptic feedback
+on property:twrp.modules.loaded=true
+    start vendor.mot.vibrator-hal-1-0
+

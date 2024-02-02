@@ -1,0 +1,31 @@
+# Standard AOSP partitions
+/boot             	emmc    /dev/block/bootdevice/by-name/boot		flags=slotselect
+/dtbo             	emmc    /dev/block/bootdevice/by-name/dtbo		flags=slotselect;flashimg;backup;display=Dtbo
+/vbmeta           	emmc    /dev/block/bootdevice/by-name/vbmeta		flags=slotselect;flashimg;backup;display=Vbmeta
+/vbmeta_system	  	emmc    /dev/block/bootdevice/by-name/vbmeta_system	flags=slotselect;flashimg;backup;display=Vbmeta_system
+/vendor_boot      	emmc    /dev/block/bootdevice/by-name/vendor_boot	flags=slotselect;flashimg;backup;display=Vendor_boot
+
+# Logical
+/system_image	  	emmc    /dev/block/mapper/system			flags=slotselect;flashimg;backup;display=System
+/system_ext_image	emmc    /dev/block/mapper/system_ext			flags=slotselect;flashimg;backup;display="System Ext"
+/product_image		emmc    /dev/block/mapper/product			flags=slotselect;flashimg;backup;display=Product
+/vendor_image		emmc    /dev/block/mapper/vendor			flags=slotselect;flashimg;backup;display=Vendor
+
+# Qcom
+/persist		ext4    /dev/block/bootdevice/by-name/persist
+/persist_image		emmc	/dev/block/bootdevice/by-name/persist		flags=flashimg;backup;display=Persist
+/efs1			emmc	/dev/block/bootdevice/by-name/modemst1		flags=backup;display=EFS
+/efs2			emmc	/dev/block/bootdevice/by-name/modemst2		flags=backup;subpartitionof=/efs1
+/modemst1		emmc	/dev/block/bootdevice/by-name/modemst1		flags=flashimg;backup;display=ModemST1
+/modemst2		emmc	/dev/block/bootdevice/by-name/modemst2		flags=flashimg;backup;display=ModemST2
+/efsc			emmc	/dev/block/bootdevice/by-name/fsc		flags=flashimg;backup;display=FSC
+/efsg			emmc	/dev/block/bootdevice/by-name/fsg		flags=slotselect;flashimg;backup;display=FSG
+
+# Moto
+/prodpersist		emmc    /dev/block/bootdevice/by-name/prodpersist	flags=flashimg;backup;display=ProdPersist
+/logo			emmc    /dev/block/bootdevice/by-name/logo		flags=slotselect;flashimg;backup;display=Logo
+
+# Removable storage
+/external_sd		auto    /dev/block/mmcblk0p1
+/usb-otg		auto    /dev/block/sdg1		/dev/block/sdg		flags=fsflags=utf8;display="USB-OTG";storage;wipeingui;removable
+
